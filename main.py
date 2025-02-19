@@ -14,38 +14,41 @@ else:
     print(f"Model found at: {model_path}")
 
 
+mp_drawing = mp.solutions.drawing_utils
+mp_hands = mp.solutions.hands
+
 BaseOptions = mp.tasks.BaseOptions
 GestureRecognizer = mp.tasks.vision.GestureRecognizer
 GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
-GestureRecognizerResult = mp.tasks.vision.GestureRecognizerResult  # This is necessary
+GestureRecognizerResult = mp.tasks.vision.GestureRecognizerResult 
 VisionRunningMode = mp.tasks.vision.RunningMode
 
-'''1'''
-# Define the result callback function
-# def print_result(result: GestureRecognizerResultq, output_image: mp.Image, timestamp_ms: int):
-#     # Check if the result contains any recognized gestures
-#     if result.gestures:
-#         for gesture in result.gestures:
-#             print(f"Gesture: {gesture.name}, Confidence: {gesture.confidence}")
-#     else:
-#         print("No gesture detected.")
+def print_result(result = GestureRecognizerResult, output_image = mp.Image, timestamp_ms =int):
 
-'''2'''
-# def print_result(result: GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
-#     print('Gesture recognition result: {}'.format(result))
-
-'''3'''
-def print_result(result: GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
-    if result.gestures:
-        for gesture in result.gestures:
-            print(f"Gesture: {gesture.name}, Confidence: {gesture.confidence}")
-    else:
-        print("No gesture detected.")
+    try:
+        if result.gestures:
+            for gesture in result.gestures:
+                print(f"Detected Gesture: {gesture}")  
+                
+                if isinstance(gesture, list):
+                    for category in gesture:
+                        print(f"Gesture Category: {category.display_name}, Score: {category.score}")
+                else:
+                    print(f"Gesture does not have 'name' attribute. Structure: {gesture}")
         
-    if result.hand_landmarks:
-        print(f"Hand landmarks: {result.hand_landmarks}")
-    if result.hand_world_landmarks:
-        print(f"Hand world landmarks: {result.hand_world_landmarks}")
+        else:
+            print("No gesture detected.")
+        
+        if result.hand_landmarks:
+            for landmarks in result.hand_landmarks:
+                print("Hand landmarks detected.")
+                mp_drawing.draw_landmarks(output_image, landmarks, mp_hands.HAND_CONNECTIONS)
+
+                # for lm in landmarks.landmark:
+                    # landmark_list.append((lm.x, lm.y))
+        
+    except Exception as e:
+        print(f"Error in result callback: {e}")
 
         
 
