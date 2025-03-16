@@ -13,7 +13,7 @@ FaceDetectorResult = mp.tasks.vision.FaceDetectorResult
 VisionRunningMode = mp.tasks.vision.RunningMode
 
 # Create a face detector instance with the live stream mode:
-def print_result(result: FaceDetectorResult, output_image: mp.Image, timestamp_ms: int):
+def print_result(result = FaceDetectorResult, output_image = mp.Image, timestamp_ms = int):
     print('face detector result: {}'.format(result))
 
 options = FaceDetectorOptions(
@@ -43,6 +43,7 @@ with FaceDetector.create_from_options(options) as detector:
         detector.detect_async(mp_image, frame_timestamp_ms)
 
         # Show frame with detection result
+        frame = cv2.flip(frame,1)
         cv2.imshow("Object Detection", frame)
 
         # Break the loop if 'q' is pressed
