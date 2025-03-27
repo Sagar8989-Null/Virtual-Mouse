@@ -20,8 +20,8 @@ hands = mpHands.Hands(
 )
 
 is_dragging = False
-last_click_time = 0  # Initialize last click time
-click_cooldown = 1  # Cooldown period for clicks (in seconds)
+last_click_time = 0 
+click_cooldown = 1  # in seconds
 
 def get_angle(a, b, c):
     radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(a[1] - b[1], a[0] - b[0])
@@ -47,7 +47,6 @@ def move_mouse(index_finger_tip):
         frame_center_x = screen_width / 2
         x = int(index_finger_tip.x * screen_width * scale)
         y = int(index_finger_tip.y * screen_height * scale)
-        x = int(frame_center_x + (x - frame_center_x))  # Keep the mouse movement centered
         mouse.position = (x, y)
 
 def is_left_click(landmarks_list, thumb_index_dist):
@@ -116,7 +115,7 @@ def detect_gestures(frame, landmarks_list, processed):
             if current_time - last_click_time >= click_cooldown:
                 mouse.press(Button.left)
                 mouse.release(Button.left)
-                last_click_time = current_time  # Update the last click time
+                last_click_time = current_time  
             cv2.putText(frame, "Left Click", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         # RIGHT CLICK
@@ -125,7 +124,7 @@ def detect_gestures(frame, landmarks_list, processed):
             if current_time - last_click_time >= click_cooldown:
                 mouse.press(Button.right)
                 mouse.release(Button.right)
-                last_click_time = current_time  # Update the last click time
+                last_click_time = current_time  
             cv2.putText(frame, "Right Click", (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         # DOUBLE CLICK
@@ -153,7 +152,7 @@ def main():
             if not ret:
                 break
 
-            start_time = time.time() #latencycheck
+            start_time = time.time() # Process starting time
 
             frame = cv2.flip(frame, 1)
             frame_resized = cv2.resize(frame, (640, 480))
@@ -178,9 +177,10 @@ def main():
             for thread in threads:
                 thread.join()
 
+            end_time = time.time() # Process ending time  
+            
             # Enable this part for displaying Processing time
             """
-            end_time = time.time() 
             latency = end_time - start_time 
             print(f"Processing time per frame: {latency:.4f} seconds")
             print(f"{latency:.4f}")
